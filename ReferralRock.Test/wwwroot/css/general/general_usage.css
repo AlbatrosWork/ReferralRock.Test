@@ -63,7 +63,10 @@
 }
 
 
-.bi {
+.bi-pencil {
+    color: gray;
+}
+.bi-trash {
     color: gray;
 }
 

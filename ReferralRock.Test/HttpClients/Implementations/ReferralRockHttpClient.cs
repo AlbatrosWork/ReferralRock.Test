@@ -25,22 +25,7 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
         
         var response = await _httpClient.GetAsync($"members?{uriParameters}");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return EmptyMemberSet();
-        }
-        
-        string content = await response.Content.ReadAsStringAsync();
-
-
-        if (string.IsNullOrEmpty(content))
-        {
-            return EmptyMemberSet();
-        }
-
-        MemberSet memberSet = SerializationHelper.Deserialize<MemberSet>(content);
-
-        return memberSet;
+        return await ProcessResponse(response, EmptyMemberSet);
     }
     
     /// <inheritdoc/>
@@ -48,16 +33,7 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
     {
         var response = await _httpClient.GetAsync($"referral/single?referralId={referralId}");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
-
-        string content = await response.Content.ReadAsStringAsync();
-
-        Referral referral = SerializationHelper.Deserialize<Referral>(content);
-
-        return referral;
+        return await ProcessResponse<Referral>(response);
     }
     
     /// <inheritdoc/>
@@ -65,20 +41,7 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
     {
         var response = await _httpClient.GetAsync($"referrals?memberId={memberId}");
         
-        if (!response.IsSuccessStatusCode)
-        {
-            return EmptyReferralSet();
-        }
-        
-        string content = await response.Content.ReadAsStringAsync();
-
-
-        if (string.IsNullOrEmpty(content))
-        {
-            return EmptyReferralSet();
-        }
-
-        return SerializationHelper.Deserialize<ReferralSet>(content);
+        return await ProcessResponse(response, EmptyReferralSet);
     }
 
     /// <inheritdoc/>
@@ -88,41 +51,15 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
         
         var response = await _httpClient.GetAsync($"referrals?{uriParameters}");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return EmptyReferralSet();
-        }
-
-        string content = await response.Content.ReadAsStringAsync();
-
-        if (string.IsNullOrEmpty(content))
-        {
-            return EmptyReferralSet();
-        }
-        
-        return SerializationHelper.Deserialize<ReferralSet>(content);
+        return await ProcessResponse(response, EmptyReferralSet);
     }
 
     /// <inheritdoc/>
     public async Task<ProgramSet> GetPrograms()
     {
         var response = await _httpClient.GetAsync($"programs");
-        
-        if (!response.IsSuccessStatusCode)
-        {
-            return EmptyProgramSet();
-        }
-        
-        string content = await response.Content.ReadAsStringAsync();
 
-
-        if (string.IsNullOrEmpty(content))
-        {
-            return EmptyProgramSet();
-        }
-
-        return SerializationHelper.Deserialize<ProgramSet>(content);
-
+        return await ProcessResponse(response, EmptyProgramSet);
     }
 
     /// <inheritdoc/>
@@ -133,7 +70,7 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
         
         var response = await _httpClient.PostAsync("referrals", body);
 
-        return SerializationHelper.Deserialize<ReferralConfirmation>(await response.Content.ReadAsStringAsync());
+        return await ProcessResponse<ReferralConfirmation>(response);
 
     }
 
@@ -143,9 +80,7 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
         var body = SerializationHelper.SerializeBodyContent(referralsToUpdate);
         var response = await _httpClient.PostAsync("referral/update", body);
 
-        string content = await response.Content.ReadAsStringAsync();
-
-        return SerializationHelper.Deserialize<IEnumerable<ReferralUpdate>>(content);
+        return await ProcessResponse<IEnumerable<ReferralUpdate>>(response);
     }
 
     /// <inheritdoc/>
@@ -155,13 +90,8 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
             HttpHelpers.ConstructDeleteRequest($"{_httpClient.BaseAddress}referral/remove", referralsToBeDeleted);
 
         var response = await _httpClient.SendAsync(request);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
-        var removalResult =
-            SerializationHelper.Deserialize<IEnumerable<RemoveReferralResult>>(await response.Content.ReadAsStringAsync());
+        
+        var removalResult = await ProcessResponse<IEnumerable<RemoveReferralResult>>(response);
 
         RemoveReferralResult result = removalResult.FirstOrDefault();
 
@@ -181,28 +111,25 @@ public class ReferralRockHttpClient : IReferralRockHttpClient
         }
         return actionMessage;
     }
-
-    private MemberSet EmptyMemberSet()
+    
+    private async Task<T> ProcessResponse<T>(HttpResponseMessage response, Func<T> emptyResult = null)
     {
-        return new MemberSet()
+        if (!response.IsSuccessStatusCode)
         {
-            Members = Enumerable.Empty<Member>()
-        };
+            return emptyResult.Invoke(); 
+        }
+
+        string content = await response.Content.ReadAsStringAsync();
+
+        if (string.IsNullOrEmpty(content))
+        {
+            return emptyResult.Invoke();
+        }
+
+        return SerializationHelper.Deserialize<T>(content);
     }
 
-    private ReferralSet EmptyReferralSet()
-    {
-        return new ReferralSet()
-        {
-            Referrals = Enumerable.Empty<Referral>()
-        };
-    }
-
-    private ProgramSet EmptyProgramSet()
-    {
-        return new ProgramSet()
-        {
-            Programs = Enumerable.Empty<Models.Domain.Programs.Program>()
-        };
-    }
+    private MemberSet EmptyMemberSet() => new() { Members = Enumerable.Empty<Member>() };
+    private ReferralSet EmptyReferralSet() => new() { Referrals = Enumerable.Empty<Referral>() };
+    private ProgramSet EmptyProgramSet() => new() { Programs = Enumerable.Empty<Models.Domain.Programs.Program>() };
 }

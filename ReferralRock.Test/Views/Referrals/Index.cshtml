@@ -49,14 +49,13 @@
             <div class="col-md-12">
                 @if (Model.ActionMessage.IsSuccessMessage)
                 {
-                    <div class="success-message">
+                    <div class="success-message d-flex justify-content-center">
                         @Model.ActionMessage.Message
                     </div>
                 }
                 else
                 {
-                    <div class="error-message">
-                        test test test here yyou go test!
+                    <div class="error-message d-flex justify-content-center">
                         @Model.ActionMessage.Message
                     </div> 
                 }
@@ -119,7 +118,7 @@
         else
         {
             <tr>
-                <td colspan="6" class="text-center">No Referrals</td>
+                <td colspan="8" class="text-center">No Referrals</td>
             </tr>
         }
 

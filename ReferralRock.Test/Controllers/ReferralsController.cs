@@ -69,7 +69,7 @@ public class ReferralsController : Controller
         IEnumerable<ReferralUpdate> referralsToBeUpdated =
             new[] { new ReferralUpdate(viewModel) };
 
-        var result = await _httpClient.UpdateReferral(referralsToBeUpdated);
+        await _httpClient.UpdateReferral(referralsToBeUpdated);
 
         return RedirectToAction("GetReferralForMember", new { memberId});
     }
