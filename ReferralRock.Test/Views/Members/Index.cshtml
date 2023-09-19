@@ -68,7 +68,7 @@
                     }
                     else
                     {
-                        <td>No Referrals</td>
+                        <td><a asp-controller="Referrals" asp-action="GetReferralForMember" asp-route-memberId="@member.Id">No Referrals</a></td>
                     }
 
                 </tr>
