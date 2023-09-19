@@ -1,5 +1,4 @@
-﻿using ReferralRock.Test.Models.Domain;
-using ReferralRock.Test.Models.Domain.Members;
+﻿using ReferralRock.Test.Models.Domain.Members;
 using ReferralRock.Test.Models.Filters;
 
 namespace ReferralRock.Test.Models.ViewModels;

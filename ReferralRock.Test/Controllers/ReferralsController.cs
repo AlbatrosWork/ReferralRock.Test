@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReferralRock.Test.HttpClients.Contracts;
-using ReferralRock.Test.Models.Domain;
 using ReferralRock.Test.Models.Domain.Referrals;
 using ReferralRock.Test.Models.Extensions;
 using ReferralRock.Test.Models.Filters;

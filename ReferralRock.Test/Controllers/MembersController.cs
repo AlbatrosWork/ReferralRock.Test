@@ -8,11 +8,9 @@ namespace ReferralRock.Test.Controllers;
 
 public class MembersController : Controller
 {
-    private readonly ILogger<MembersController> _logger;
     private readonly IReferralRockHttpClient _httpClient;
-    public MembersController(ILogger<MembersController> logger, IReferralRockHttpClient httpClient)
+    public MembersController(IReferralRockHttpClient httpClient)
     {
-        _logger = logger;
         _httpClient = httpClient;
     }
     

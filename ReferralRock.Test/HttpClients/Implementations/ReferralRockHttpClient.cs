@@ -1,6 +1,5 @@
 ﻿using ReferralRock.Test.Helpers;
 using ReferralRock.Test.HttpClients.Contracts;
-using ReferralRock.Test.Models.Domain;
 using ReferralRock.Test.Models.Domain.Members;
 using ReferralRock.Test.Models.Domain.Referrals;
 using ReferralRock.Test.Models.Filters;
