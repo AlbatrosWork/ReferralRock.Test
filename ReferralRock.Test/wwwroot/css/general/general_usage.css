@@ -1,0 +1,76 @@
+﻿body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    padding: 50px;
+}
+
+.table-header {
+    background-color: #5D44F4;
+    color: white;
+}
+
+.table {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 20px 30px;
+}
+
+.table tbody tr:hover {
+    background-color: #EAE9ED;
+}
+
+.table-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.btn-blue {
+    background-color: #5D44F4;
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #4B32E2;
+    color: white;
+}
+
+.small-header {
+    width: 10px; 
+}
+
+.red-icon {
+    color: red;
+}
+
+.error-message {
+    background-color: red; 
+    color: white; 
+    padding: 10px; 
+    border-radius: 8px;
+}
+
+.success-message {
+    background-color: limegreen;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+
+.bi {
+    color: gray;
+}
+
+a:hover .bi-pencil {
+    color: #5D44F4;
+}
+
+a:hover .bi-trash {
+    color: red;
+}

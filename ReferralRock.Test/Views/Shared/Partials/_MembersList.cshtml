@@ -1,0 +1,40 @@
+﻿@model ReferralRock.Test.Models.Response.MemberSet
+
+
+<table class="table table-striped">
+    <thead class="table-header">
+    <tr>
+        <th>Display Name</th>
+        <th>Program Name</th>
+        <th>Referral Code</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Members.Any())
+    {
+        @foreach (var member in Model.Members)
+        {
+            <tr>
+                <td>@member.DisplayName</td>
+                <td>@member.ProgramName</td>
+                <td>@member.ReferralCode</td>
+                <td>
+                    <a asp-controller="Referrals" asp-action="CreateReferralForMember" 
+                       asp-route-ProgramName="@member.ProgramName"
+                       asp-route-MemberDisplayName="@member.DisplayName" 
+                       asp-route-MemberReferralCode="@member.ReferralCode" 
+                       class="btn btn-blue">Select</a>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="6" class="text-center">No Members</td>
+        </tr>
+    }
+    
+    </tbody>
+</table>

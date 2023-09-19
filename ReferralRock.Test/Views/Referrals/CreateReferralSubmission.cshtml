@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ReferralRock.Test.Models.ViewModels.ReferralSubmissionViewModel
+
+<div class="container d-flex justify-content-center">
+    <div class="row w-100">
+        <div class="col-md-12 offset-md-2">
+            <form asp-controller="Referrals" asp-action="SubmitReferralCreation">
+                <div class="container">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="error-message">
+                                    @Model.ErrorMessage
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row mb-3">
+                        <h2>Selected Referring Member</h2>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <input class="form-control" disabled="disabled" value="Program Name"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" disabled="disabled" value="@Model.ReferralDetails.ProgramName"/>
+                            <input type="hidden" asp-for="ReferralDetails.ProgramName" value="@Model.ReferralDetails.ProgramName"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <input class="form-control" disabled="disabled" value="Display Name"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input asp-for="ReferralDetails.ReferringMemberName" class="form-control" disabled="disabled" value="@Model.ReferralDetails.ReferringMemberName"/>
+                            <input type="hidden" asp-for="ReferralDetails.ReferringMemberName" value="@Model.ReferralDetails.ReferringMemberName"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-md-2">
+                            <input class="form-control" disabled="disabled" value="Referral Code"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input asp-for="ReferralDetails.MemberReferralCode" class="form-control" disabled="disabled" value="@Model.ReferralDetails.MemberReferralCode"/>
+                            <input type="hidden" asp-for="ReferralDetails.MemberReferralCode" value="@Model.ReferralDetails.MemberReferralCode"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <h2>Referral Details</h2>
+                    </div>
+                    <div class="row">
+                        <label asp-for="ReferralDetails.ExternalIdentifier"></label>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="ReferralDetails.ExternalIdentifier" placeholder="Set a unique identifier that you can use to reference this referral"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="ReferralDetails.FirstName"></label>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ReferralDetails.LastName"></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input class="form-control" asp-for="ReferralDetails.FirstName" required placeholder="First Name"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" asp-for="ReferralDetails.LastName" required placeholder="Last Name"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="ReferralDetails.Email"></label>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ReferralDetails.Amount"></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input class="form-control" asp-for="ReferralDetails.Email" required placeholder="Customer Email Address"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" type="number" min="0" asp-for="ReferralDetails.Amount"/>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <input type="checkbox" class="form-check-input" value="" id="approveReferralCheckbox"/>
+                            <label class="form-check-label" for="approveReferralCheckbox">
+                                Approve Referral
+                            </label>
+                            <input type="hidden" asp-for="ReferralDetails.Status" name="Status"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="col-md-8 btn btn-blue">Create Referral</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>    
+    </div>    
+</div>
+
+
+
+<script>
+    document.getElementById('approveReferralCheckbox').addEventListener('change', function() {
+        const approvalStatusField = document.getElementById('Status');
+        if (this.checked) {
+            approvalStatusField.value = "Approved";
+        } else {
+            approvalStatusField.value = "";
+        }
+    });
+</script>

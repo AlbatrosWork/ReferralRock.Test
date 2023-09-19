@@ -1,0 +1,64 @@
+﻿@model ReferralRock.Test.Models.ViewModels.CreateReferralViewModel
+
+<div class="container">
+    
+    <h2 class="mb-5">Create a Referral</h2>
+
+    <form id="membersSearchForm">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <select class="form-control" name="SelectedProgram">
+                    <option value="">Select Program</option>
+                    @foreach (var program in Model.SelectablePrograms)
+                    {
+                        if (Model.SelectedProgram == program)
+                        {
+                            <option value="@program" selected>@program</option>
+                        }
+                        else
+                        {
+                            <option value="@program">@program</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>    
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                <input class="form-control" type="text" name="QuerySearch" asp-for="QuerySearch" placeholder="Search For Members"/>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-blue"><i class="bi bi-search"></i></button>
+            </div>
+        </div>
+    </form>
+    
+    <div id="searchResults">
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#membersSearchForm").submit(function (event) {
+            event.preventDefault();
+            
+            var formData = $(this).serialize();
+            formData += "&IsPartialView=true";
+
+            $.ajax({
+                url: '@Url.Action("GetMembers", "Members")',
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    $("#searchResults").html(data);
+                },
+                error: function (error) {
+                    console.error("An error occurred:", error);
+                }
+            });
+        });
+    });
+</script>
+
+

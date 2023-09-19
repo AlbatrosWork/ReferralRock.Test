@@ -1,0 +1,155 @@
+@model ReferralRock.Test.Models.ViewModels.ReferralsViewModel
+
+<div class="row d-flex justify-content-between">
+    <div class="col-md-6">
+        <h2 class="mb-5">Referrals List</h2>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+        <div>
+           <a asp-controller="Referrals" asp-action="CreateReferral" asp-route-memberId="@Model.Filter.MemberId" class="btn btn-blue"><i class="bi bi-plus-circle"></i> Create New Referral</a>
+        </div>
+    </div>    
+</div>
+
+
+<form asp-controller="Referrals" asp-action="GetReferralsForMemberFiltered" method="post">
+    <input type="hidden" asp-for="Filter.MemberId" value="@Model.Filter.MemberId"/>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="Filter.QuerySearch" value="@Model.Filter.QuerySearch" placeholder="Search...">
+        </div>
+
+        <div class="col-md-2">
+            <select class="form-control" name="Filter.SelectedStatus">
+                <option value="">Select Status</option>
+                @foreach (var status in Model.Statuses)
+                {
+                    if (Model.Filter.SelectedStatus == status)
+                    {
+                        <option value="@status" selected>@status</option>
+                    }
+                    else
+                    {
+                        <option value="@status">@status</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3"></div>
+
+        <div class="col-md-3 d-flex justify-content-end">
+            <button type="submit" class="btn btn-blue mb-3">
+                <i class="bi bi-funnel"></i> Apply Filters
+            </button>
+        </div>
+    </div>
+    @if (Model.ActionMessage is not null)
+    {
+        <div class="row mb-3">
+            <div class="col-md-12">
+                @if (Model.ActionMessage.IsSuccessMessage)
+                {
+                    <div class="success-message">
+                        @Model.ActionMessage.Message
+                    </div>
+                }
+                else
+                {
+                    <div class="error-message">
+                        test test test here yyou go test!
+                        @Model.ActionMessage.Message
+                    </div> 
+                }
+                
+            </div>
+        </div>
+    }
+    <table class="table table-striped">
+        <thead class="table-header">
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Referring Member</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th colspan="2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.Referrals.Any())
+        {
+            @foreach (var referral in Model.Referrals)
+            {
+                <tr>
+                    <td>@referral.FirstName @referral.LastName</td>
+                    <td>@referral.Email</td>
+                    <td>@referral.Status</td>
+                    <td>@referral.ReferringMemberName</td>
+                    <td>@referral.CreateDate</td>
+                    <td>@referral.UpdateDate</td>
+                    <td>
+                        <a class="d-inline" asp-controller="Referrals" asp-action="EditReferral" asp-route-referralId="@referral.Id"><i class="bi bi-pencil fs-4 d-inline"></i></a>
+                    </td>
+                    <td>
+                        <a class="d-inline ms-2 show-confirm-modal" href="#" data-referral-id="@referral.Id" data-member-id="@referral.ReferringMemberId">
+                            <i class="bi bi-trash fs-4 d-inline red-icon"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            
+            <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmationModalLabel">Are you sure you want to delete referral?</h5>
+                        </div>
+                        <div class="modal-body">
+                            WARNING: This will also delete any associated rewards.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="dismissBtn" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="confirmBtn" data-url="@Url.Action("DeleteReferral", "Referrals", new { referralId = "REFERRAL_ID_PLACEHOLDER", memberId = "MEMBER_ID_PLACEHOLDER" })">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No Referrals</td>
+            </tr>
+        }
+
+        </tbody>
+    </table>
+</form>
+
+<script>
+$(document).ready(function() {
+    $(".show-confirm-modal").click(function() {
+        var referralId = $(this).data("referral-id");
+        var memberId = $(this).data("member-id");
+        var url = $("#confirmBtn").data("url")
+            .replace("REFERRAL_ID_PLACEHOLDER", referralId)
+            .replace("MEMBER_ID_PLACEHOLDER", memberId);
+        $("#confirmBtn").data("url", url);
+        $("#confirmationModal").modal('show');
+    });
+
+    $("#confirmBtn").click(function() {
+        var url = $(this).data("url");
+        window.location.href = url;
+    });
+    
+    $(document).ready(function() {
+        $("#dismissBtn").click(function() {
+            $('#confirmationModal').modal('hide');
+        });
+    });
+});
+
+
+</script>

@@ -1,0 +1,86 @@
+﻿@model ReferralRock.Test.Models.ViewModels.MembersViewModel
+
+<h2 class="mb-5">Members List</h2>
+
+<form asp-controller="Members" asp-action="GetMembers" method="post">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="Filter.QuerySearch" value="@Model.Filter.QuerySearch" placeholder="Search...">
+        </div>
+
+        <div class="col-md-2">
+            <select class="form-control" name="Filter.SelectedProgram">
+                <option value="">Select Program</option>
+                @foreach (var program in Model.Programs)
+                {
+                    if (Model.Filter.SelectedProgram == program)
+                    {
+                        <option value="@program" selected>@program</option>
+                    }
+                    else
+                    {
+                        <option value="@program">@program</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3 mt-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="true" name="Filter.ShowDisabled" id="disabledCheckbox" @(Model.Filter.ShowDisabled ? "checked" : "")>
+                <label class="form-check-label" for="disabledCheckbox">
+                    Show Disabled Users
+                </label>
+            </div>
+        </div>
+        
+        <div class="col-md-3 d-flex justify-content-end">
+            <button type="submit" class="btn btn-blue mb-3">
+                <i class="bi bi-funnel"></i> Apply Filters
+            </button>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="table-header">
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Program</th>
+            <th>Referral Code</th>
+            <th>Referrals</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.Members.Any())
+        {
+            @foreach (var member in Model.Members)
+            {
+                <tr>
+                    <td>@member.FirstName @member.LastName</td>
+                    <td>@member.Email</td>
+                    <td>@member.ProgramName</td>
+                    <td>@member.ReferralCode</td>
+                    <td>@member.ReferralCode</td>
+                    @if (member.Referrals > 0)
+                    {
+                        <td><a asp-controller="Referrals" asp-action="GetReferralForMember" asp-route-memberId="@member.Id">View Referrals</a></td>
+                    }
+                    else
+                    {
+                        <td>No Referrals</td>
+                    }
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No Members</td>
+            </tr>
+        }
+        
+        </tbody>
+    </table>
+</form>
